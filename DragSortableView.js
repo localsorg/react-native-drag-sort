@@ -313,7 +313,7 @@ export default class DragSortableView extends Component {
     }, 220);
   }
 
-  changePosition(startIndex, endIndex, programmaticaly) {
+  changePosition(startIndex, endIndex, programmatically) {
     if (startIndex == endIndex) {
       const curItem = this.state.dataSource[startIndex];
       if (curItem != null) {
@@ -368,14 +368,11 @@ export default class DragSortableView extends Component {
         dataSource: newDataSource,
       },
       () => {
-        if (!programmaticaly) {
-          if (this.props.onDataChange) {
-            this.props.onDataChange(
-              this.getOriginalData(),
-              startIndex,
-              endIndex
-            );
-          }
+        if (this.props.onDataChange) {
+          this.props.onDataChange(this.getOriginalData(), startIndex, endIndex);
+        }
+
+        if (!programmatically) {
           // Prevent RN from drawing the beginning and end
           const startItem = this.state.dataSource[startIndex];
           this.state.dataSource[startIndex].position.setValue({
@@ -458,7 +455,7 @@ export default class DragSortableView extends Component {
       return (
         <Animated.View
           key={key}
-          ref={(ref) => this.sortRefs.set(index, ref)}
+          ref={ref => this.sortRefs.set(index, ref)}
           {...this._panResponder.panHandlers}
           style={[
             styles.item,
